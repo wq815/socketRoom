@@ -1,0 +1,55 @@
+@import "./mobile.scss";
+@import "./pc.scss";
+
+body,
+html,
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+.login {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  .particle-network-animation {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+  }
+  .login-content {
+    margin: 0 auto;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > section {
+      opacity: 0;
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      .el-form {
+        .el-button {
+          width: 100%;
+        }
+        h2 {
+          font-size: $baseFontSizeX;
+          text-align: center;
+        }
+      }
+    }
+    .login-help {
+      display: flex;
+      justify-content: space-between;
+      span {
+        color: $tipTextColor;
+        cursor: pointer;
+      }
+    }
+  }
+}

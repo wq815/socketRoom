@@ -1,0 +1,18 @@
+@media screen and (min-width: 1200px) {
+  .login-content {
+    & > section {
+      width: 50%;
+      & > img {
+        width: 50%;
+        opacity: 0.8;
+      }
+      .el-form {
+        flex-grow: 1;
+        padding: 20px 40px;
+        .el-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

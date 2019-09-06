@@ -1,0 +1,18 @@
+@media screen and (max-width: 1200px) {
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .login-content {
+    & > section {
+      width: 80%;
+      & > img {
+        display: none;
+      }
+      .el-form {
+        flex-grow: 1;
+        padding: 10px 20px;
+      }
+    }
+  }
+}
