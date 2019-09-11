@@ -15,11 +15,11 @@ Vue.use(Elementui, { size: 'small' })
 
 let globel = window.globel
 import scoket from "vue-socket.io";
-// Vue.use(new scoket({
-//   debug: true,
-//   connection: globel.api.socketApi
-//   // connection: 'http://263580r9p5.zicp.vip:36117'
-// }))
+Vue.use(new scoket({
+  debug: true,
+  connection: globel.api.socketApi
+  // connection: 'http://263580r9p5.zicp.vip:36117'
+}))
 
 import axios from 'axios'
 import '@/assets/js/http.js'
@@ -27,6 +27,7 @@ Vue.prototype.$axios = axios;
 
 import animejs from 'animejs'
 Vue.prototype.$anime = animejs;
+console.log('main.js')
 
 Vue.prototype.$vue = Vue;
 Vue.config.productionTip = false

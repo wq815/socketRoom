@@ -38,17 +38,23 @@ export default {
         userPas: ""
       },
       isRegist:false,
+      // particleColors: [
+      //   "#cb6600",
+      //   "#53bbb1",
+      //   "#7cb3ff",
+      //   "#e2a520",
+      //   "#32a444",
+      //   "#cf2e5a",
+      //   "#563ae0",
+      //   "#FF6F5C",
+      //   "#144384"
+      // ], // 画布--球颜色数组 #fff 格式
       particleColors: [
-        "#cb6600",
-        "#53bbb1",
-        "#7cb3ff",
-        "#e2a520",
-        "#32a444",
-        "#cf2e5a",
-        "#563ae0",
-        "#FF6F5C",
-        "#144384"
-      ], // 画布--球颜色数组 #fff 格式
+        "#619ac3",
+        "#8fb2c9",
+        "#5698c3",
+        "#1677b3",
+      ],
       particleMinWidth: 8, // 画布--球最小直径 number
       particleMaxWidth: 12, // 画布--球最大直径 number
       netLineColor: "#e1e5e9", // 画布--线条颜色 #fff 格式
@@ -83,6 +89,7 @@ export default {
     login(){
       this.$axios.get('/').then(res=>{
         console.log(res)
+        this.$router.push({name:'helloWorld'})
       })
     },
     bottomAnimetion() {

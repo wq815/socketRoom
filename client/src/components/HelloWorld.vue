@@ -25,9 +25,12 @@ export default {
       count: ""
     };
   },
+  mounted(){
+    console.log(111)
+  },
   created() {
-    console.log(this.$vue)
-    // this.$socket.emit("connection", 1);
+    // console.log(this.$vue)
+    this.$socket.emit("getUserNum");
   },
   methods: {
     sendMessage() {

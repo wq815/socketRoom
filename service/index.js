@@ -5,19 +5,21 @@ import koaCors from 'koa-cors'
 import koaBody from 'koa-bodyparser'
 import ws from 'ws'
 import Mock from 'mockjs'
+import createToken from './utils/createToken'
+import staticPage from 'koa-static'
 let Random = Mock.Random
 
 const app = new koa()
-// var WebSocketServer = require('ws').Server
-// var wss = new WebSocketServer({ port: 8181 });
-// wss.on('connection', function (ws) {
-//   console.log('client connected');
-//   ws.on('message', function (message) {
-//     console.log(message);
-//     ws.send('请求成功')
-//   });
-// });
-app.use(koaCors()).use(koaBody({ mutations: true })).use(router.routes())
+var WebSocketServer = require('ws').Server
+var wss = new WebSocketServer({ port: 8181 });
+wss.on('connection', function (ws) {
+  console.log('client connected');
+  ws.on('message', function (message) {
+    console.log(message);
+    ws.send('请求成功')
+  });
+});
+app.use(koaCors()).use(koaBody({ mutations: true })).use(staticPage('../client/dist')).use(router.routes())
 
 app.listen(3000, err => {
   console.log('run...')
@@ -27,6 +29,8 @@ app.listen(3000, err => {
 let count = 0
 let arr = []
 let message = []
+let nickNames = {}
+let roomName = {}
 const appSocket = new koa()
 
 const server = appSocket.listen(4000);
@@ -53,6 +57,9 @@ io.sockets.on('connection', (socket, data) => {
     message = []
     io.sockets.emit('reset')
   })
+  socket.on('getUserNum', () => {
+    socket.emit('userNum',count)
+  })
   socket.on('disconnect', () => {
     socket.emit('logout')
     let index = null
@@ -67,3 +74,7 @@ io.sockets.on('connection', (socket, data) => {
     console.log('user disconnected', socket.id);
   });
 });
+function addRoomNames(socket,name){
+  nickNames[socket.id] = name
+  ++count
+}

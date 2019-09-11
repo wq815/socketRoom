@@ -53,3 +53,33 @@ html,
     }
   }
 }
+.joinRoom{
+  // display: flex;
+  // justify-content: space-between;
+  // height: 100%;
+  // position: relative;
+  i {
+    position: absolute;
+  }
+  // section{
+  //   // flex-grow: 1;
+  //   position: relative;
+  //   width: 25%;
+  // }
+  // .create{
+  //   background-color: aqua;
+  //   &::after{
+  //     display: inline-block;
+  //     border: 100% solid black;
+  //     border-right-color: red;
+  //     border-bottom-width: 0;
+  //     position: absolute;
+  //     right: -100%;
+  //     height: 100%;
+  //     content:'';
+  //   }
+  // }
+  // .join{
+  //   background-color: azure;
+  // }
+}
