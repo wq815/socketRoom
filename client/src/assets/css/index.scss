@@ -33,6 +33,18 @@ html,
       background-color: white;
       display: flex;
       justify-content: space-between;
+      min-height: 350px;
+      &>div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        background: url("../img/login.jpg") no-repeat center center;
+        background-size:auto 100%;
+        // img{
+        //   width: 100%;
+        // }
+      }
       .el-form {
         .el-button {
           width: 100%;
@@ -43,12 +55,17 @@ html,
         }
       }
     }
+    .login-title{
+      margin-bottom: 0;
+    }
     .login-help {
       display: flex;
       justify-content: space-between;
       span {
         color: $tipTextColor;
         cursor: pointer;
+        font-size: 12px;
+        padding: 0 5px;
       }
     }
   }

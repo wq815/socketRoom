@@ -10,15 +10,15 @@ import staticPage from 'koa-static'
 let Random = Mock.Random
 
 const app = new koa()
-var WebSocketServer = require('ws').Server
-var wss = new WebSocketServer({ port: 8181 });
-wss.on('connection', function (ws) {
-  console.log('client connected');
-  ws.on('message', function (message) {
-    console.log(message);
-    ws.send('请求成功')
-  });
-});
+// var WebSocketServer = require('ws').Server
+// var wss = new WebSocketServer({ port: 8181 });
+// wss.on('connection', function (ws) {
+//   console.log('client connected');
+//   ws.on('message', function (message) {
+//     console.log(message);
+//     ws.send('请求成功')
+//   });
+// });
 app.use(koaCors()).use(koaBody({ mutations: true })).use(staticPage('../client/dist')).use(router.routes())
 
 app.listen(3000, err => {
@@ -37,7 +37,7 @@ const server = appSocket.listen(4000);
 const io = require('socket.io').listen(server);
 io.sockets.on('connection', (socket, data) => {
   console.log('连接成功', { id: socket.id })
-  arr.push({ socketId: socket.id, name: Random.cname() })
+  arr.push({ socketId: socket.id, socket: socket, name: Random.cname() })
   for (let i of message) {
     socket.emit('user', i)
   }
@@ -50,6 +50,7 @@ io.sockets.on('connection', (socket, data) => {
         name = i.name
       }
     }
+    socket.emit("message", "message")
     message.push({ name: name, message: msg })
     io.sockets.emit('user', { name: name, message: msg })
   });
@@ -58,7 +59,7 @@ io.sockets.on('connection', (socket, data) => {
     io.sockets.emit('reset')
   })
   socket.on('getUserNum', () => {
-    socket.emit('userNum',count)
+    socket.emit('userNum', count)
   })
   socket.on('disconnect', () => {
     socket.emit('logout')
@@ -74,7 +75,7 @@ io.sockets.on('connection', (socket, data) => {
     console.log('user disconnected', socket.id);
   });
 });
-function addRoomNames(socket,name){
+function addRoomNames(socket, name) {
   nickNames[socket.id] = name
   ++count
 }

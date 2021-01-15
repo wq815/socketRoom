@@ -5,8 +5,11 @@ class UserInfoModel {
 	async userLogin() {
 		return await query(escape`select * from user`)
 	}
-	async getOneUser(user) {
+	async getOneUserByName(user) {
 		return await query(escape`select * from user where user=${user.name}`)
+	}
+	async getOneUser(user) {
+		return await query(escape`select * from user where user=${user.name} and password=${user.password}`)
 	}
 	async addNewUser(user) {
 		return await query(escape`INSERT INTO user (user,password) values(${user.name},${user.password})`)

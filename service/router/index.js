@@ -4,7 +4,8 @@ import userInfoController from '../controller/userInfoController'
 const router = new Router()
 
 router.prefix(base_API)
-router.get('/', userInfoController.userLogin)
+router.post('/login', userInfoController.userLogin)
+router.post('/regist', userInfoController.userRegist)
 
 
 export default router

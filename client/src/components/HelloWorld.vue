@@ -7,7 +7,7 @@
         <span>{{item.message}}</span>
       </div>
     </section>
-    <el-input v-model="value" required></el-input>
+    <el-input v-model="value"></el-input>
     <el-button type="primary" @click="sendMessage">发送</el-button>
     <el-button type="primary" @click="reset">清空</el-button>
   </div>
@@ -15,6 +15,7 @@
 <script>
 import Vue from "vue";
 import scoket from "vue-socket.io";
+import { message } from "element-ui"
 export default {
   data() {
     return {
@@ -70,6 +71,12 @@ export default {
     },
     logout(){
       this.message = []
+    },
+    message(data){
+      this.$message({
+        message:data,
+        type:"success"
+      })
     }
     // disconnect(){
     //   this.$socket.emit("disconnect");

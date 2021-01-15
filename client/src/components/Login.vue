@@ -3,25 +3,51 @@
     <div class="particle-network-animation"></div>
     <div class="login-content">
       <section class="login-content-anime">
-        <img src="@/assets/img/login.jpg" alt />
-        <el-form :model="form">
+        <div>
+          <!-- <img src="@/assets/img/login.jpg" alt /> -->
+        </div>
+        <el-form ref="form" :model="form" :rules="rules">
           <el-form-item>
-            <h2 class="login-title">{{ isRegist?'用户注册':'一蓑烟雨任平生' }}</h2>
+            <h2 class="login-title">
+              {{ isRegist ? "用户注册" : "一蓑烟雨任平生" }}
+            </h2>
+          </el-form-item>
+          <el-form-item prop="userName">
+            <el-input
+              prefix-icon="el-icon-search"
+              v-model="form.userName"
+              clearable
+              placeholder="请输入用户名"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="userPas">
+            <el-input
+              prefix-icon="el-icon-search"
+              v-model="form.userPas"
+              type="password"
+              show-password
+              placeholder="请输入密码"
+            ></el-input>
+          </el-form-item>
+          <el-form-item v-if="isRegist" prop="userPasRe">
+            <el-input
+              prefix-icon="el-icon-search"
+              v-model="form.userPasRe"
+              type="password"
+              show-password
+              placeholder="请输入再次密码"
+            ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input prefix-icon="el-icon-search" v-model="form.userName" clearable placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input prefix-icon="el-icon-search" v-model="form.userPas" type="password" show-password placeholder="请输入密码"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button v-if='!isRegist' type="primary" @click="login">登陆</el-button>
-            <el-button v-else type="primary" @click="login">注册</el-button>
-          </el-form-item>
-          <el-form-item>
+            <el-button v-if="!isRegist" type="primary" @click="login"
+              >登陆</el-button
+            >
+            <el-button v-else type="primary" @click="regist">注册</el-button>
             <div class="login-help">
-              <span @click="isRegist = !isRegist" :class="{'isRegist':isRegist}">{{ isRegist?'登陆':'注册' }}</span>
-              <span>改密</span>
+              <span @click="checkModel" :class="{ isRegist: isRegist }">{{
+                isRegist ? "去登陆" : "立即注册"
+              }}</span>
+              <span @click="tipResetPas">忘记密码?</span>
             </div>
           </el-form-item>
         </el-form>
@@ -35,9 +61,31 @@ export default {
     return {
       form: {
         userName: "",
-        userPas: ""
+        userPas: "",
+        userPasRe: "",
       },
-      isRegist:false,
+      rules: {
+        userName: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+        ],
+        userPas: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        userPasRe: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (!value) {
+                callback(new Error("请再次输入密码"));
+              }
+              if (value != this.form.userPas) {
+                callback(new Error("两次输入密码不一致"));
+              }
+              callback();
+            },
+            trigger: "blur",
+          },
+        ],
+      },
+      isRegist: false,
       // particleColors: [
       //   "#cb6600",
       //   "#53bbb1",
@@ -49,25 +97,20 @@ export default {
       //   "#FF6F5C",
       //   "#144384"
       // ], // 画布--球颜色数组 #fff 格式
-      particleColors: [
-        "#619ac3",
-        "#8fb2c9",
-        "#5698c3",
-        "#1677b3",
-      ],
+      particleColors: ["#619ac3", "#8fb2c9", "#5698c3", "#1677b3"],
       particleMinWidth: 8, // 画布--球最小直径 number
       particleMaxWidth: 12, // 画布--球最大直径 number
       netLineColor: "#e1e5e9", // 画布--线条颜色 #fff 格式
       backgroundColor: "#f1f2f6", // 画布--背景颜色 #fff 格式
       netLineDistance: 200, // 画布--线条长度 number
       density: 60000, // 画布--球密度 越小越密集 number
-      velocity: 0.7 // 画布--球运动速度 越小越慢 number
+      velocity: 0.7, // 画布--球运动速度 越小越慢 number
     };
   },
   created() {
-    '0'.split('').map(item=>{
-      return item*1
-    })
+    "0".split("").map((item) => {
+      return item * 1;
+    });
     if (document.documentElement.clientWidth > 1200) {
       this.density = 30000;
     } else {
@@ -76,28 +119,67 @@ export default {
   },
   mounted() {
     this.$anime({
-      targets:'.login-content-anime',
-      opacity:'1',
-      translateY:['100px','0px'],
+      targets: ".login-content-anime",
+      opacity: "1",
+      translateY: ["100px", "0px"],
       easing: "easeOutExpo",
-      delay:100,
-      duration: 5000
-    })
+      delay: 100,
+      duration: 5000,
+    });
     this.bottomAnimetion();
   },
   methods: {
-    login(){
-      this.$axios.get('/').then(res=>{
-        console.log(res)
-        this.$router.push({name:'helloWorld'})
-      })
+    login() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$axios.post("/login", this.form).then((res) => {
+            const { resCode, resMsg } = res.data;
+            if (resCode == "G0000") {
+              this.$router.push({ name: "helloWorld" });
+            } else {
+              this.$message.warning(resMsg);
+            }
+          });
+        }
+      });
+    },
+    regist() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$axios.post("/regist", this.form).then((res) => {
+            const { resCode, resMsg } = res.data;
+            if (resCode == "G0000") {
+              this.$message.success(resMsg);
+              this.isRegist = !this.isRegist;
+              this.form = {
+                userName: "",
+                userPas: "",
+                userPasRe: "",
+              };
+            } else {
+              this.$message.warning(resMsg);
+            }
+          });
+        }
+      });
+    },
+    tipResetPas(){
+      this.$message.warning("暂不支持修改密码")
+    },
+    checkModel() {
+      this.isRegist = !this.isRegist;
+      this.form = {
+        userName: "",
+        userPas: "",
+        userPasRe: "",
+      };
     },
     bottomAnimetion() {
       let _this = this;
       let ParticleNetworkAnimation, PNA, pna, backgroundColor;
-      ParticleNetworkAnimation = PNA = function() {};
+      ParticleNetworkAnimation = PNA = function () {};
 
-      PNA.prototype.init = function() {
+      PNA.prototype.init = function () {
         let element = "particle-network-animation";
         element = document.getElementsByClassName(element)[0];
         this.$el = document.getElementsByClassName(element)[0];
@@ -118,20 +200,20 @@ export default {
         return this;
       };
 
-      PNA.prototype.bindUiActions = function() {
-        window.onresize = function() {
+      PNA.prototype.bindUiActions = function () {
+        window.onresize = function () {
           this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
           this.sizeCanvas();
           this.particleNetwork.createParticles();
         }.bind(this);
       };
 
-      PNA.prototype.sizeCanvas = function() {
+      PNA.prototype.sizeCanvas = function () {
         this.canvas.width = this.container.offsetWidth;
         this.canvas.height = this.container.offsetHeight;
       };
 
-      var Particle = function(parent, x, y) {
+      var Particle = function (parent, x, y) {
         this.network = parent;
         this.canvas = parent.canvas;
         this.ctx = parent.ctx;
@@ -148,11 +230,11 @@ export default {
         this.y = y || Math.random() * this.canvas.height;
         this.velocity = {
           x: (Math.random() - 0.5) * parent.options.velocity,
-          y: (Math.random() - 0.5) * parent.options.velocity
+          y: (Math.random() - 0.5) * parent.options.velocity,
         };
       };
 
-      Particle.prototype.update = function() {
+      Particle.prototype.update = function () {
         if (this.opacity < 1) {
           this.opacity += 0.01;
         } else {
@@ -171,7 +253,7 @@ export default {
         this.y += this.velocity.y;
       };
 
-      Particle.prototype.draw = function() {
+      Particle.prototype.draw = function () {
         // Draw particle
         this.ctx.beginPath();
         this.ctx.fillStyle = this.particleColor;
@@ -180,14 +262,14 @@ export default {
         this.ctx.fill();
       };
 
-      var ParticleNetwork = function(parent) {
+      var ParticleNetwork = function (parent) {
         this.options = {
           velocity: _this.velocity, // the higher the faster
           density: _this.density, // the lower the denser
           netLineDistance: _this.netLineDistance,
           netLineColor: _this.netLineColor,
           particleColors: _this.particleColors, // ['#6D4E5C', '#aaa', '#FFC458' ]
-          backgroundColor: _this.backgroundColor
+          backgroundColor: _this.backgroundColor,
         };
         this.canvas = parent.canvas;
         this.ctx = parent.ctx;
@@ -195,7 +277,7 @@ export default {
         this.init();
       };
 
-      ParticleNetwork.prototype.init = function() {
+      ParticleNetwork.prototype.init = function () {
         // Create particle objects
         this.createParticles(true);
 
@@ -205,7 +287,7 @@ export default {
         this.bindUiActions();
       };
 
-      ParticleNetwork.prototype.createParticles = function(isInitial) {
+      ParticleNetwork.prototype.createParticles = function (isInitial) {
         // Initialise / reset particles
         var me = this;
         this.particles = [];
@@ -215,7 +297,7 @@ export default {
           var counter = 0;
           clearInterval(this.createIntervalId);
           this.createIntervalId = setInterval(
-            function() {
+            function () {
               if (counter < quantity - 1) {
                 // Create particle object
                 this.particles.push(new Particle(this));
@@ -234,18 +316,18 @@ export default {
         }
       };
 
-      ParticleNetwork.prototype.createInteractionParticle = function() {
+      ParticleNetwork.prototype.createInteractionParticle = function () {
         // Add interaction particle
         this.interactionParticle = new Particle(this);
         this.interactionParticle.velocity = {
           x: 0,
-          y: 0
+          y: 0,
         };
         this.particles.push(this.interactionParticle);
         return this.interactionParticle;
       };
 
-      ParticleNetwork.prototype.removeInteractionParticle = function() {
+      ParticleNetwork.prototype.removeInteractionParticle = function () {
         // Find it
         var index = this.particles.indexOf(this.interactionParticle);
         if (index > -1) {
@@ -255,7 +337,7 @@ export default {
         }
       };
 
-      ParticleNetwork.prototype.update = function() {
+      ParticleNetwork.prototype.update = function () {
         if (this.canvas) {
           this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
           this.ctx.fillStyle = backgroundColor;
@@ -314,30 +396,30 @@ export default {
         }
       };
 
-      ParticleNetwork.prototype.bindUiActions = function() {
+      ParticleNetwork.prototype.bindUiActions = function () {
         // Mouse / touch event handling
         this.mouseIsDown = false;
         this.touchIsMoving = false;
 
-        this.onMouseUp = function(e) {
+        this.onMouseUp = function (e) {
           this.mouseIsDown = false;
         }.bind(this);
 
-        this.onMouseOut = function(e) {
+        this.onMouseOut = function (e) {
           this.removeInteractionParticle();
         }.bind(this);
         this.canvas.addEventListener("mouseup", this.onMouseUp);
         this.canvas.addEventListener("mouseout", this.onMouseOut);
       };
 
-      ParticleNetwork.prototype.unbindUiActions = function() {
+      ParticleNetwork.prototype.unbindUiActions = function () {
         if (this.canvas) {
           this.canvas.removeEventListener("mouseup", this.onMouseUp);
           this.canvas.removeEventListener("mouseout", this.onMouseOut);
         }
       };
 
-      var getLimitedRandom = function(min, max, roundToInteger) {
+      var getLimitedRandom = function (min, max, roundToInteger) {
         var number = Math.random() * (max - min) + min;
         if (roundToInteger) {
           number = Math.round(number);
@@ -345,15 +427,15 @@ export default {
         return number;
       };
 
-      var returnRandomArrayitem = function(array) {
+      var returnRandomArrayitem = function (array) {
         return array[Math.floor(Math.random() * array.length)];
       };
 
       pna = new ParticleNetworkAnimation();
       pna.init(".particle-network-animation");
-    }
+    },
   },
-  computed: {}
+  computed: {},
 };
 </script>
 <style scope lang='scss'>
