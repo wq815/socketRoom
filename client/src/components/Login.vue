@@ -9,7 +9,7 @@
         <el-form ref="form" :model="form" :rules="rules">
           <el-form-item>
             <h2 class="login-title">
-              {{ isRegist ? "用户注册" : "一蓑烟雨任平生" }}
+              {{ isRegist ? "用户注册" : "用户登录" }}
             </h2>
           </el-form-item>
           <el-form-item prop="userName">
@@ -56,6 +56,8 @@
   </div>
 </template>
 <script>
+import mock from "mockjs"
+let Random = mock.Random
 export default {
   data() {
     return {
@@ -101,6 +103,7 @@ export default {
       particleMinWidth: 8, // 画布--球最小直径 number
       particleMaxWidth: 12, // 画布--球最大直径 number
       netLineColor: "#e1e5e9", // 画布--线条颜色 #fff 格式
+      netLineWidth: 2, // 画布--线条宽度
       backgroundColor: "#f1f2f6", // 画布--背景颜色 #fff 格式
       netLineDistance: 200, // 画布--线条长度 number
       density: 60000, // 画布--球密度 越小越密集 number
@@ -268,6 +271,7 @@ export default {
           density: _this.density, // the lower the denser
           netLineDistance: _this.netLineDistance,
           netLineColor: _this.netLineColor,
+          netLineWidth: _this.netLineWidth,
           particleColors: _this.particleColors, // ['#6D4E5C', '#aaa', '#FFC458' ]
           backgroundColor: _this.backgroundColor,
         };
@@ -375,7 +379,7 @@ export default {
                   this.options.netLineDistance) *
                 p1.opacity *
                 p2.opacity;
-              this.ctx.lineWidth = 3;
+              this.ctx.lineWidth = this.options.netLineWidth;
               this.ctx.strokeStyle = gnt1;
               this.ctx.moveTo(p1.x, p1.y);
               this.ctx.lineTo(p2.x, p2.y);
@@ -428,6 +432,7 @@ export default {
       };
 
       var returnRandomArrayitem = function (array) {
+        return Random.color()
         return array[Math.floor(Math.random() * array.length)];
       };
 

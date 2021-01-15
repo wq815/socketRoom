@@ -17,7 +17,10 @@ let globel = window.globel
 import scoket from "vue-socket.io";
 Vue.use(new scoket({
   debug: true,
-  connection: globel.api.socketApi
+  connection: globel.api.socketApi,
+  // options: {
+  //   autoConnect: false
+  // }
   // connection: 'http://263580r9p5.zicp.vip:36117'
 }))
 

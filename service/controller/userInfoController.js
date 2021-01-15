@@ -5,7 +5,6 @@ class UserInfoController {
 		const { userName, userPas } = ctx.request.body
 		// await userInfo.updateUser({name:'admin',password:md5('123456')})
 		let userinfo = await userInfo.getOneUser({ name: userName, password: md5(userPas) })
-		console.log(userinfo)
 		if (userinfo.length) {
 			ctx.body = {
 				status: 200,

@@ -8,7 +8,7 @@
 export default {
   name: 'App',
   created(){
-    this.$socket.emit("connection", 1);
+    // this.$socket.emit("connection", 1);
   }
 }
 </script>
