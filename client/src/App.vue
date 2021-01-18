@@ -1,16 +1,14 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-  created(){
-    // this.$socket.emit("connection", 1);
-  }
-}
+  name: "App",
+  created() {},
+};
 </script>
 
 <style>

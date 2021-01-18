@@ -51,10 +51,6 @@ export default {
     this.$socket.emit("disconnect");
   },
   sockets: {
-    connect(data) {
-      //与socket.io连接后回调
-      console.log("socket connected");
-    },
     getSocketId(data) {
       console.log("scoket.id:", data);
       this.id = data;
@@ -72,12 +68,6 @@ export default {
     logout(){
       this.message = []
     },
-    message(data){
-      this.$message({
-        message:data,
-        type:"success"
-      })
-    }
     // disconnect(){
     //   this.$socket.emit("disconnect");
     // }

@@ -56,8 +56,8 @@
   </div>
 </template>
 <script>
-import mock from "mockjs"
-let Random = mock.Random
+import mock from "mockjs";
+let Random = mock.Random;
 export default {
   data() {
     return {
@@ -136,9 +136,10 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.$axios.post("/login", this.form).then((res) => {
-            const { resCode, resMsg } = res.data;
+            const { resCode, resMsg, data } = res.data;
             if (resCode == "G0000") {
-              this.$router.push({ name: "helloWorld" });
+              sessionStorage.setItem("userInfo", JSON.stringify(data));
+              this.$router.push({ path: "/" });
             } else {
               this.$message.warning(resMsg);
             }
@@ -166,8 +167,8 @@ export default {
         }
       });
     },
-    tipResetPas(){
-      this.$message.warning("暂不支持修改密码")
+    tipResetPas() {
+      this.$message.warning("暂不支持修改密码");
     },
     checkModel() {
       this.isRegist = !this.isRegist;
@@ -432,7 +433,7 @@ export default {
       };
 
       var returnRandomArrayitem = function (array) {
-        return Random.color()
+        return Random.color();
         return array[Math.floor(Math.random() * array.length)];
       };
 

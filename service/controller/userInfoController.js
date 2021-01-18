@@ -9,7 +9,7 @@ class UserInfoController {
 			ctx.body = {
 				status: 200,
 				resCode: "G0000",
-				data: "登陆成功"
+				data: userinfo[0]
 			}
 		} else {
 			ctx.body = {
@@ -21,7 +21,7 @@ class UserInfoController {
 	}
 	async userRegist(ctx) {
 		const { userName, userPas, userPasRe } = ctx.request.body
-		if(userPas != userPasRe){
+		if (userPas != userPasRe) {
 			ctx.body = {
 				status: 200,
 				resCode: "U0002",
