@@ -15,7 +15,7 @@
           <el-form-item prop="userName">
             <el-input
               prefix-icon="el-icon-search"
-              v-model="form.userName"
+              v-model.trim="form.userName"
               clearable
               placeholder="请输入用户名"
             ></el-input>
@@ -23,7 +23,7 @@
           <el-form-item prop="userPas">
             <el-input
               prefix-icon="el-icon-search"
-              v-model="form.userPas"
+              v-model.trim="form.userPas"
               type="password"
               show-password
               placeholder="请输入密码"
@@ -32,7 +32,7 @@
           <el-form-item v-if="isRegist" prop="userPasRe">
             <el-input
               prefix-icon="el-icon-search"
-              v-model="form.userPasRe"
+              v-model.trim="form.userPasRe"
               type="password"
               show-password
               placeholder="请输入再次密码"
