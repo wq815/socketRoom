@@ -1,4 +1,6 @@
 export default {
-    isUserLogin:false,
-    userInfo:{}
+    isUserLogin: false,
+    userInfo: {},
+    count: 0,
+    socketId: null
 }

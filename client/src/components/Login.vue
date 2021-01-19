@@ -3,7 +3,7 @@
     <div class="particle-network-animation"></div>
     <div class="login-content">
       <section class="login-content-anime">
-        <div>
+        <div class="img">
           <!-- <img src="@/assets/img/login.jpg" alt /> -->
         </div>
         <el-form ref="form" :model="form" :rules="rules">
@@ -138,7 +138,8 @@ export default {
           this.$axios.post("/login", this.form).then((res) => {
             const { resCode, resMsg, data } = res.data;
             if (resCode == "G0000") {
-              sessionStorage.setItem("userInfo", JSON.stringify(data));
+              sessionStorage.setItem("userInfo",JSON.stringify(data))
+              this.$store.dispatch("USER_SIGNIN",JSON.stringify(data))
               this.$router.push({ path: "/" });
             } else {
               this.$message.warning(resMsg);
