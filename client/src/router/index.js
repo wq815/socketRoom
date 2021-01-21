@@ -17,12 +17,10 @@ const router = new Router({
     {
       path: '/joinRoom',
       name: 'joinRoom',
-      component: JoinRoom
-    },
-    {
-      path: '/home2',
-      name: 'home2',
-      component: Home
+      component: JoinRoom,
+      meta:{
+        isRoom:true
+      }
     },
     {
       path: "/",
@@ -32,7 +30,10 @@ const router = new Router({
         {
           path: "/helloWorld",
           name: "helloWorld",
-          component: HelloWorld
+          component: HelloWorld,
+          meta:{
+            isRoom:true
+          }
         }
       ]
     }

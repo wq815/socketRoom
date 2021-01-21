@@ -4,16 +4,63 @@ let Random = Mock.Random
 let count = 0
 let arr = []
 let message = []
-let nickNames = {}
-let roomName = {}
+let roomList = []
 
-function joinRooms() {
+export const joinRoom = ({ roomInfo, socketInfo }) => {
+}
 
+export const createRoom = ({ userinfo, socketId }) => {
+	let socket = getUserById(socketId)
+	if (!socket) {
+		return {
+			status: 200,
+			resCode: "S0001",
+			resMsg: "该用户不存在",
+			data: null
+		}
+	}
+	let roomName = Random.ctitle(2, 5)
+	let roomId = Random.guid()
+	roomList.push({
+		id: roomId,
+		roomName,
+		socket: [socket],
+		userId: [userinfo[0].id]
+	})
+	return {
+		status: 200,
+		resCode: "G0000",
+		data: {
+			id: roomId,
+			roomName,
+		}
+	}
+}
+
+export const outRoom = ({ roomInfo, socketInfo }) => {
+}
+
+export const getRoomList = () => {
+	return roomList
+}
+
+const getUserById = (socketId) => {
+	let reslute = null
+	arr.map(item => {
+		if (item.socketId == socketId) {
+			reslute = item
+		}
+	})
+	return reslute
 }
 
 export const socketRouter = {
 	"connection": (io, socket) => {
-		arr.push({ socketId: socket.id, socket: socket, name: Random.cname() })
+		let name = Random.cname()
+		arr.push({ socketId: socket.id, socket: socket, name })
+		socket.on("getName", () => {
+			socket.emit('getName', name)
+		})
 	},
 	"messageList": (io, socket) => {
 		count = count + 1
@@ -57,6 +104,17 @@ export const socketRouter = {
 				}
 			}
 			io.sockets.emit('messageList', { name: arr[index].name, message: `匿名用户${arr[index].name}加入聊天室`, id: null })
+		})
+	},
+	"getRoomName": (io, socket) => {
+		socket.on('getRoomName', (userId) => {
+			let name = null
+			for (let room of roomList) {
+				if (room.userId.indexOf(userId) != -1) {
+					name = room.roomName
+				}
+			}
+			socket.emit('getRoomName', name)
 		})
 	},
 	"joinRoom": (io, socket) => {

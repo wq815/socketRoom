@@ -23,7 +23,7 @@
     <div class="speakRoom_footer">
       <el-input v-model="value"></el-input>
       <el-button type="primary" @click="sendMessage">发送</el-button>
-      <el-button type="primary" @click="reset">清空</el-button>
+      <el-button v-if="userInfo.user == 'admin'" type="primary" @click="reset">清空</el-button>
     </div>
   </div>
 </template>
@@ -41,9 +41,7 @@ export default {
   },
   mounted() {},
   created() {
-    this.$socket.emit("getUserNum");
-    this.$socket.emit("getSocketId");
-    this.$socket.emit("readyToRoom")
+    this.$socket.emit("readyToRoom");
   },
   updated() {},
   methods: {
@@ -53,7 +51,7 @@ export default {
     },
     reset() {
       this.$socket.emit("reset");
-    },
+    }
   },
   computed: {
     count() {
@@ -62,6 +60,9 @@ export default {
     socketId() {
       return this.$store.state.user.socketId;
     },
+    userInfo(){
+      return JSON.parse(sessionStorage.getItem("userInfo"))
+    }
   },
   destroyed() {
     this.$socket.emit("disconnect");
@@ -87,7 +88,7 @@ export default {
   .isRight {
     text-align: right;
   }
-  .isTip{
+  .isTip {
     text-align: center;
     font-size: $baseFontSizeM;
     color: $tipTextColor;

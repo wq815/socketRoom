@@ -140,7 +140,7 @@ export default {
             if (resCode == "G0000") {
               sessionStorage.setItem("userInfo",JSON.stringify(data))
               this.$store.dispatch("USER_SIGNIN",JSON.stringify(data))
-              this.$router.push({ path: "/" });
+              this.$router.push({ path: "/joinRoom" });
             } else {
               this.$message.warning(resMsg);
             }

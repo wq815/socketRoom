@@ -2,6 +2,8 @@
 
 > A node.js project
 
+mysql 中间件对于 mysql8 以上的默认强密码规则无法兼容，需要更改这个设置。具体方式请自行百度！
+
 ## Build Setup
 
 ## resCode 含义

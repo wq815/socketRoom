@@ -21,26 +21,7 @@ export default {
   data() {
     return {};
   },
-  created() {},
-  sockets: {
-    connect(data) {
-      //与socket.io连接后回调
-      console.log("socket connected");
-    },
-    userNum(data) {
-      this.$store.dispatch("USER_COUNT",data)
-    },
-    getSocketId(data) {
-      console.log("scoket.id:", data);
-      this.$store.dispatch("USER_SOCKET_ID",data)
-    },
-    message(data) {
-      // this.$message({
-      //   message: data,
-      //   type: "success",
-      // });
-    },
-  },
+  created() {}
 };
 </script>
 <style lang="scss" scoped>
