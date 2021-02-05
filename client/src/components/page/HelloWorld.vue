@@ -23,7 +23,9 @@
     <div class="speakRoom_footer">
       <el-input v-model="value"></el-input>
       <el-button type="primary" @click="sendMessage">发送</el-button>
-      <el-button v-if="userInfo.user == 'admin'" type="primary" @click="reset">清空</el-button>
+      <el-button v-if="userInfo.user == 'admin'" type="primary" @click="reset"
+        >清空</el-button
+      >
     </div>
   </div>
 </template>
@@ -37,6 +39,7 @@ export default {
       io: null,
       message: [],
       value: "",
+      roomId: this.$route.params.roomId,
     };
   },
   mounted() {},
@@ -46,12 +49,15 @@ export default {
   updated() {},
   methods: {
     sendMessage() {
-      this.$socket.emit("chatmessage", this.value);
+      this.$socket.emit("chatmessage", {
+        roomId: this.roomId,
+        value: this.value,
+      });
       this.value = "";
     },
     reset() {
       this.$socket.emit("reset");
-    }
+    },
   },
   computed: {
     count() {
@@ -60,12 +66,15 @@ export default {
     socketId() {
       return this.$store.state.user.socketId;
     },
-    userInfo(){
-      return JSON.parse(sessionStorage.getItem("userInfo"))
-    }
+    userInfo() {
+      return JSON.parse(sessionStorage.getItem("userInfo"));
+    },
   },
   destroyed() {
-    this.$socket.emit("disconnect");
+    this.$socket.emit("disconnect", {
+      roomId: this.roomId,
+      userId: this.userInfo.id,
+    });
   },
   sockets: {
     messageList(data) {

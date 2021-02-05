@@ -9,6 +9,7 @@ router.post('/login', userInfoController.userLogin)
 router.post('/regist', userInfoController.userRegist)
 router.get('/getRoomList', socketController.getRoomList)
 router.post('/createRoom', socketController.createRoom)
+router.post('/joinRoom', socketController.joinRoom)
 
 
 export default router

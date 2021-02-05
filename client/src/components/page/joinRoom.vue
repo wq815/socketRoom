@@ -10,7 +10,7 @@
           <span class="joinRoom_list_name">{{ room.roomName }}</span>
           <span class="joinRoom_list_count">房间总人数：{{ room.count }}</span>
         </div>
-        <el-button type="text" @click="joinRoom">加入该房间</el-button>
+        <el-button type="text" @click="joinRoom(room)">加入该房间</el-button>
       </div>
     </section>
   </div>
@@ -44,8 +44,20 @@ export default {
         }
       });
     },
-    joinRoom() {
-      this.$message.success("已加入");
+    joinRoom(room) {
+      let params = {
+        userId: this.userInfo.id,
+        socketId: this.socketId,
+        roomId: room.id,
+      };
+      this.$axios.post("joinRoom", params).then((res) => {
+        const { resCode, resMsg, data } = res.data;
+        if (resCode == "G0000") {
+          this.$router.push({ name: "helloWorld", params: { roomId: data.id } });
+        } else {
+          this.$message.warning(resMsg);
+        }
+      });
     },
     createRoom() {
       let params = {
@@ -55,7 +67,7 @@ export default {
       this.$axios.post("createRoom", params).then((res) => {
         const { resCode, resMsg, data } = res.data;
         if (resCode == "G0000") {
-          this.$router.push("/");
+          this.$router.push({ name: "helloWorld", params: { roomId: data.id } });
         } else {
           this.$message.warning(resMsg);
         }

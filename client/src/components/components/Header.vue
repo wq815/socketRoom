@@ -25,11 +25,15 @@ export default {
     userInfo() {
       return JSON.parse(sessionStorage.getItem("userInfo"));
     },
+    roomId() {
+      return this.$route.params.roomId ? this.$route.params.roomId : null;
+    },
   },
   created() {
     console.log(this.$route);
     this.$socket.emit("getName");
-    this.$socket.emit("getRoomName", this.userInfo.id);
+    this.$socket.emit("getRoomName", this.roomId);
+    this.$socket.emit("getUserNum", this.roomId);
   },
   sockets: {
     getName(data) {

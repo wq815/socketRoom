@@ -6,8 +6,8 @@ export default {
   data() {
     return {};
   },
+  computed: {},
   created() {
-    this.$socket.emit("getUserNum");
     this.$socket.emit("getSocketId");
   },
   sockets: {
@@ -22,12 +22,7 @@ export default {
       console.log("scoket.id:", data);
       this.$store.dispatch("USER_SOCKET_ID", data);
     },
-    message(data) {
-      // this.$message({
-      //   message: data,
-      //   type: "success",
-      // });
-    },
+    message(data) {},
   },
 };
 </script>

@@ -19,12 +19,18 @@ class SocketController {
         }
     }
     async joinRoom(ctx) {
-        let roomList = getRoomList()
-        ctx.body = {
-            status: 200,
-            resCode: "G0000",
-            data: roomList
+        const { userId, socketId, roomId } = ctx.request.body
+        let userinfo = await userInfo.getOneUserById(userId)
+        if (!userinfo.length) {
+            ctx.body = {
+                status: 200,
+                resCode: "S0001",
+                resMsg: "请重新登录",
+                data: null
+            }
         }
+        let reslute = joinRoom({ userinfo, socketId, roomId })
+        ctx.body = reslute
     }
     async createRoom(ctx) {
         const { userId, socketId } = ctx.request.body
@@ -33,7 +39,7 @@ class SocketController {
             ctx.body = {
                 status: 200,
                 resCode: "S0001",
-                resMsg: "该用户不存在",
+                resMsg: "请重新登录",
                 data: null
             }
         }

@@ -6,7 +6,26 @@ let arr = []
 let message = []
 let roomList = []
 
-export const joinRoom = ({ roomInfo, socketInfo }) => {
+export const joinRoom = ({ userinfo, socketId, roomId }) => {
+	let socket = getUserById(socketId)
+	let roomInfo = getRoomById(roomId)
+	if (!socket || !roomInfo) {
+		return {
+			status: 200,
+			resCode: "S0001",
+			resMsg: "该用户不存在",
+			data: null
+		}
+	}
+	roomInfo.socket.push(socket)
+	roomInfo.userId.push(userinfo[0].id)
+	return {
+		status: 200,
+		resCode: "G0000",
+		data: {
+			id: roomId
+		}
+	}
 }
 
 export const createRoom = ({ userinfo, socketId }) => {
@@ -37,7 +56,7 @@ export const createRoom = ({ userinfo, socketId }) => {
 	}
 }
 
-export const outRoom = ({ roomInfo, socketInfo }) => {
+export const outRoom = ({ roomId, userId }) => {
 }
 
 export const getRoomList = () => {
@@ -48,6 +67,16 @@ const getUserById = (socketId) => {
 	let reslute = null
 	arr.map(item => {
 		if (item.socketId == socketId) {
+			reslute = item
+		}
+	})
+	return reslute
+}
+
+const getRoomById = (roomId) => {
+	let reslute = null
+	roomList.map(item => {
+		if (item.id == roomId) {
 			reslute = item
 		}
 	})
@@ -67,16 +96,19 @@ export const socketRouter = {
 		io.sockets.emit('userNum', count)
 	},
 	"chatmessage": (io, socket) => {
-		socket.on('chatmessage', (msg) => {
+		socket.on('chatmessage', ({ roomId, value }) => {
 			let name = null
 			for (let i of arr) {
 				if (i.socketId == socket.id) {
 					name = i.name
 				}
 			}
-			socket.emit("message", "发送成功")
-			message.push({ name: name, message: msg, id: socket.id })
-			io.sockets.emit('messageList', { name: name, message: msg, id: socket.id })
+			let room = getRoomById(roomId)
+			room.socket.map(item=>{
+				io.to(item.id).emit('messageList', { name: name, message: value, id: socket.id })
+			})
+			// socket.emit("message", "发送成功")
+			message.push({ name: name, message: value, id: socket.id })
 		});
 	},
 	"reset": (io, socket) => {
@@ -86,7 +118,15 @@ export const socketRouter = {
 		})
 	},
 	"getUserNum": (io, socket) => {
-		socket.on('getUserNum', () => {
+		socket.on('getUserNum', (roomId) => {
+			let count = null
+			roomList.map(item => {
+				console.log(roomId, item)
+				if (item.id == roomId) {
+					count = item.socket.length
+				}
+			})
+			console.log(count)
 			socket.emit('userNum', count)
 		})
 	},
@@ -107,10 +147,10 @@ export const socketRouter = {
 		})
 	},
 	"getRoomName": (io, socket) => {
-		socket.on('getRoomName', (userId) => {
+		socket.on('getRoomName', (roomId) => {
 			let name = null
 			for (let room of roomList) {
-				if (room.userId.indexOf(userId) != -1) {
+				if (room.id == roomId) {
 					name = room.roomName
 				}
 			}
@@ -123,7 +163,8 @@ export const socketRouter = {
 		})
 	},
 	"disconnect": (io, socket) => {
-		socket.on('disconnect', () => {
+		socket.on('disconnect', ({ roomId, userId }) => {
+			outRoom({ roomId, userId })
 			socket.emit('logout')
 			let index = null
 			for (let i in arr) {

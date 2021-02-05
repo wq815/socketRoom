@@ -3,7 +3,6 @@ import query from './utils/query'
 import router from './router/normolRouter'
 import koaCors from 'koa-cors'
 import koaBody from 'koa-bodyparser'
-import createToken from './utils/createToken'
 import staticPage from 'koa-static'
 import { socketRouter } from "./router/socketRouter"
 
