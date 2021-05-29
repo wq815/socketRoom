@@ -26,7 +26,7 @@
     "mockjs": "^1.0.1-beta3",
     "mysql": "^2.17.1",
     "socket.io": "^2.2.0",
-    "ws": "^7.1.2"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
